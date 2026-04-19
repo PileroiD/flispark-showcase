@@ -16,7 +16,13 @@ Flispark combines:
 
 The system is designed to automate content creation and make learning more interactive.
 
----
+👉 Flispark is live at https://flispark.com
+
+#### 🚧 UI is currently being redesigned — updated visuals coming soon
+
+## 📸 Screenshots / Demo
+
+> (Add screenshots or GIFs here)
 
 ## 🧠 Key Features
 
@@ -28,8 +34,6 @@ The system is designed to automate content creation and make learning more inter
 - Stripe subscriptions & payments
 - Image search with fallback strategy (Google → GIPHY → Tenor → Reddit)
 - File uploads via Backblaze B2
-
----
 
 ## 🏗 System Overview
 
@@ -43,8 +47,6 @@ Flispark is built as a modern full-stack SaaS application:
 - **AI:** Google Gemini API
 - **External APIs:** Google, Reddit, GIPHY, Tenor, Backblaze B2
 
----
-
 ## ⚙️ Engineering Highlights
 
 - Implemented fallback system for unreliable external APIs
@@ -54,8 +56,6 @@ Flispark is built as a modern full-stack SaaS application:
 - Optimized queries and caching strategies
 - Handled edge cases (timeouts, API failures, retries)
 
----
-
 ## 🧩 Architecture Philosophy
 
 - Separation of concerns (auth, payments, AI, storage)
@@ -63,23 +63,11 @@ Flispark is built as a modern full-stack SaaS application:
 - Resilient API design with fallback strategies
 - Security-first approach (no trust on client-side)
 
----
-
-## 📸 Screenshots / Demo
-
-> (Add screenshots or GIFs here)
-
----
-
-## 🚧 UI is currently being redesigned — updated visuals coming soon
-
 ## 🔒 Note
 
 The main production codebase is private due to sensitive business logic and API keys.
 
 This repository is intended to showcase architecture, features, and system design.
-
----
 
 ## 👨‍💻 Author
 
