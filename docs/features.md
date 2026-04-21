@@ -18,7 +18,7 @@ FliSpark is a SaaS language learning platform that combines flashcards, AI, and 
 - Progress tracking per deck
 - AI-generated sentence contexts for each word
 
-![Flashcards System](./screenshots/cards-overview.png)
+<img src="../screenshots/cards-overview.png" width="600" />
 
 ### 📖 Learning System
 
@@ -30,12 +30,16 @@ FliSpark is a SaaS language learning platform that combines flashcards, AI, and 
 - Combines recognition and recall-based learning
 - Designed to simulate real language usage
 
+<img src="../screenshots/learn-multiple-choice.png" width="600" />
+
 ### 🧪 Text-to-Test (AI Feature)
 
 - Converts real-world text into personalized learning material
 - Detects unknown vocabulary based on user progress
 - Filters and selects relevant words automatically
 - Generates adaptive tests to reinforce new vocabulary
+
+<img src="../screenshots/ttt-overview.png" width="600" />
 
 ### 🔐 Authentication System
 
@@ -49,6 +53,8 @@ FliSpark is a SaaS language learning platform that combines flashcards, AI, and 
 - Stripe integration for subscriptions
 - In-app currency system
 - Payment-based feature unlocking
+
+<img src="../screenshots/subscriptions-overview.png" width="600" />
 
 ### 🖼 Image Search System
 

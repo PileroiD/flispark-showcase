@@ -22,7 +22,7 @@ The system is designed to automate content creation and make learning more inter
 
 ## 🎬 Project Showcase
 
-[![Watch the demo](https://img.youtube.com/vi/wcJLvcIAj_8/maxresdefault.jpg)](https://www.youtube.com/watch?v=wcJLvcIAj_8)
+[![Watch the demo](https://img.youtube.com/vi/wcJLvcIAj_8/hqdefault.jpg)](https://www.youtube.com/watch?v=wcJLvcIAj_8)
 
 Short demo of FliSpark features and UI.
 
