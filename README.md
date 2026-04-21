@@ -20,9 +20,11 @@ The system is designed to automate content creation and make learning more inter
 
 #### 🚧 UI is currently being redesigned — updated visuals coming soon
 
-## 📸 Screenshots / Demo
+## 🎬 Project Showcase
 
-> (Add screenshots or GIFs here)
+[![Watch the demo](https://img.youtube.com/vi/wcJLvcIAj_8/maxresdefault.jpg)](https://www.youtube.com/watch?v=wcJLvcIAj_8)
+
+Short demo of FliSpark features and UI.
 
 ## 🧠 Key Features
 

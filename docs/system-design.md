@@ -14,8 +14,6 @@ Users can:
 
 The system is designed as a fullstack web application with a focus on fast iteration and scalability for future growth.
 
----
-
 ## 2. Architecture
 
 The application follows a monolithic fullstack architecture using Next.js.
@@ -70,8 +68,6 @@ BE --> STO
 BE --> IMG
 ```
 
----
-
 ## 3. Tech Stack
 
 - **Next.js (App Router)**  
@@ -97,8 +93,6 @@ BE --> IMG
 
 - **Stripe**  
   Payment processing platform for handling subscriptions and payments.
-
----
 
 ## 4. Data Flow
 
@@ -148,11 +142,9 @@ BE --> IMG
     - A request is sent to the backend
     - The test is persisted in the database and becomes available for the learning flow
 
----
-
 ## 5. Database Design (High-Level)
 
-## Core Entities
+### Core Entities
 
 - **User**
     - Stores user profile, authentication data, and credits (diamonds)
@@ -174,8 +166,6 @@ BE --> IMG
     - Stores generated word lists from free-form text input
     - Used for dynamic test creation
 
----
-
 ### Supporting Entities
 
 - **Subscription**
@@ -194,8 +184,6 @@ BE --> IMG
     - Stores user ratings for WordSets
     - One rating per user per WordSet
 
----
-
 ### Learning & Progress Tracking
 
 - **LearnedWord**
@@ -211,20 +199,16 @@ BE --> IMG
 - **Bookmark**
     - Allows users to save WordSets
 
----
-
 ### Authentication & System
 
 - **Account**
-    - OAuth provider accounts (Google, GitHub, etc.)
+    - OAuth provider accounts (Google, etc.)
 
 - **VerificationToken**
     - Email verification and password setup
 
 - **WebhookEvent**
     - Stores Stripe webhook events (idempotency layer)
-
----
 
 ## Relationships Overview
 
@@ -237,126 +221,15 @@ BE --> IMG
 - WordSet → Language (source & target)
 - WordSet → WordSet (self-relation for cloning)
 
----
-
 ## Diagram
 
 ```mermaid
 erDiagram
-    USER {
-        string id PK
-        string email UK
-        string hashedPassword
-        int diamonds
-        datetime createdAt
-    }
-
-    SUBSCRIPTION {
-        string id PK
-        string userId FK
-        string stripeSubId UK
-        string status
-        datetime currentPeriodEnd
-    }
-
-    VERIFICATIONTOKEN {
-        string id PK
-        string userId FK
-        string token UK
-        datetime expires
-    }
-
-    ACCOUNT {
-        string id PK
-        string userId FK
-        string provider
-        string providerAccountId
-    }
-
-    LANGUAGE {
-        string id PK
-        string code UK
-        string name
-    }
-
-    TAG {
-        string id PK
-        string name UK
-    }
-
-    WORDSET {
-        string id PK
-        string authorId FK
-        string sourceLang FK
-        string targetLang FK
-        string cloneOf FK
-        string title
-        boolean isPrivate
-    }
-
-    WORD {
-        string id PK
-        string wordsetId FK
-        int order
-        string word
-        string translation
-    }
-
-    RATING {
-        string id PK
-        string userId FK
-        string wordsetId FK
-        int ratingNumber
-    }
-
-    BOOKMARK {
-        string id PK
-        string userId FK
-        string wordsetId FK
-    }
-
-    QUICKACCESSTEST {
-        string id PK
-        string userId FK
-        string wordsetId FK
-    }
-
-    TESTCOMPLETION {
-        string id PK
-        string userId FK
-        string wordsetId FK
-        int count
-    }
-
-    LEARNEDWORD {
-        string id PK
-        string userId FK
-        string wordId FK
-        datetime learnedAt
-    }
-
-    TEXTTOTEST {
-        string id PK
-        string userId FK
-        string name
-        string sourceLang
-        string targetLang
-        int completedTimes
-    }
-
-    WEBHOOKEVENT {
-        string id PK
-        string stripeId UK
-        string type
-        datetime createdAt
-    }
-
-    USER ||--o| SUBSCRIPTION : has
-    USER ||--o| VERIFICATIONTOKEN : has
+    USER ||--|| SUBSCRIPTION : has
     USER ||--o{ ACCOUNT : links
     USER ||--o{ WORDSET : creates
     USER ||--o{ RATING : gives
-    USER ||--o{ BOOKMARK : bookmarks
+    USER ||--o{ BOOKMARK : saves
     USER ||--o{ QUICKACCESSTEST : pins
     USER ||--o{ TESTCOMPLETION : completes
     USER ||--o{ LEARNEDWORD : learns
@@ -368,105 +241,76 @@ erDiagram
     WORDSET ||--o{ QUICKACCESSTEST : pinned_in
     WORDSET ||--o{ TESTCOMPLETION : tracked_in
     WORDSET }o--o{ TAG : tagged_with
-    LANGUAGE ||--o{ WORDSET : source_language
-    LANGUAGE ||--o{ WORDSET : target_language
-    WORDSET ||--o{ WORDSET : clones
+    WORDSET }o--|| LANGUAGE : source_language
+    WORDSET }o--|| LANGUAGE : target_language
 
     WORD ||--o{ LEARNEDWORD : tracked_by
 ```
 
----
+## 6. API Design (High-Level)
 
-## 6. API Design
+### Word Sets
 
-Example endpoints:
+- POST /wordsets → create word set
+- GET /wordsets → fetch user word sets
+- GET /wordsets/:id → get word set details
 
-- `POST /api/tests`  
-  Create a new test
+### Words
 
-- `GET /api/tests/:id`  
-  Get test by id
+- POST /wordsets/:id/words → add word
+- DELETE /words/:id → remove word
 
-- `POST /api/attempts`  
-  Submit test attempt
+### Text-to-Test (AI Flow)
 
-- `GET /api/attempts`  
-  Get user attempts
+- POST /gemini/text-to-test → generate word list from text (AI-powered)
 
----
+### Learning
 
-## 7. Key Features Design
+- POST /learned-words → mark word as learned
+- GET /learned-words → fetch user progress
 
-### 7.1 Text-to-Test
+### Tests
 
-Allows users to generate tests from raw text input.
+- POST /tests → create test
+- GET /tests/:id → get test details
 
-Flow:
-
-1. User provides text
-2. System processes text
-3. Questions are generated automatically
-4. User can edit and save the test
-
-Key challenge:
-
-- parsing text and generating meaningful questions
-
----
-
-### 7.2 Learning System
-
-Supports multiple learning modes:
-
-- **Multiple Choice**
-- **True/False**
-- **Active Recall** (user types the answer)
-- **Audio Test** (user listens and types the answer)
-
-Each mode uses different validation logic and UI interaction.
-
----
-
-## 8. Scalability Considerations
+## 7. Scalability Considerations
 
 (Currently basic, but designed for future scaling)
 
-- Pagination for large datasets (tests, attempts)
-- Separation of concerns between frontend and backend
-- Potential future improvements:
-    - caching (Redis)
-    - CDN for static assets
-    - background jobs for heavy processing
+- AI processing (Text-to-Test) is handled asynchronously to avoid blocking user requests.
+- Word and test data is stored in a relational database with normalized relations for consistency.
+- Learn progress tracking is separated from core content to reduce write contention.
+- Stripe webhooks are processed independently to ensure payment reliability.
+- Frequently accessed data (word sets, tests) can be cached to reduce database load.
+- System is designed to support horizontal scaling of the backend API layer.
 
----
+## 8. Security
 
-## 9. Security
-
-- Authentication (NextAuth / JWT)
-- Input validation on backend
-- Protection against:
-    - XSS
-    - CSRF
-- Rate limiting (planned)
-
----
+- Authentication is handled via secure session-based / OAuth flows.
+- Sensitive data (e.g. passwords) is hashed and never stored in plain text.
+- API routes are protected and validated on the backend.
+- User-specific resources (word sets, tests, progress) are scoped by user ID to prevent unauthorized access.
+- Stripe webhooks are verified to prevent fake payment events.
+- Input data is validated and sanitized before processing (including AI requests).
 
 ## 10. Trade-offs & Decisions
 
-- **Monolith vs Microservices**  
-  Chosen monolith for faster development and simplicity.
-
-- **Prisma vs raw SQL**  
-  Prisma provides type safety and faster development.
-
-- **Next.js fullstack approach**  
-  Reduces complexity by keeping frontend and backend in one codebase.
-
----
+- AI processing (Text-to-Test and translations) is handled on the backend instead of the frontend to ensure security, consistency, and control over external API usage.
+- Text-to-Test generation is executed asynchronously via API calls rather than blocking the UI, improving perceived performance and user experience.
+- Learned words are stored in a separate entity instead of being embedded in Word or WordSet to decouple user progress from core content and allow flexible learning analytics.
+- WordSet cloning was chosen instead of copying full datasets to reduce data duplication and keep relationships between original and derived content.
+- A relational database was chosen over NoSQL to ensure strong consistency between users, word sets, words, and learning progress.
+- AI-generated translations are processed on the backend rather than stored directly from the AI response to allow normalization, filtering, and future extensibility.
+- Test creation is separated from Text-to-Test generation to keep content generation and learning workflows independent.
+- User learning progress (LearnedWord, TestCompletion) is tracked separately from WordSet data to avoid coupling learning state with content structure.
+- Stripe payments are handled via webhook events to ensure reliable and idempotent subscription state updates.
 
 ## 11. Future Improvements
 
-- AI-powered question generation
-- Spaced repetition system
-- Better analytics for learning progress
-- Mobile app version
+- Browser extension for quickly adding words directly to word sets from any webpage.
+- UI/UX redesign with improved consistency and modern interface patterns.
+- Enhanced analytics for tracking learning progress and user performance.
+- Mobile application version for iOS and Android.
+- Ability to save favorite words and focus learning only on selected items.
+- Dedicated mobile app experience optimized for learning on the go.
